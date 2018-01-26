@@ -1,0 +1,8 @@
+{
+  "name": "vchain-client",
+  "app_id": "",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
