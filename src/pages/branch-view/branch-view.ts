@@ -5,7 +5,7 @@ import { colorSets } from './color-sets';
 import { countries, generateHierarchialGraph, getTurbineData } from './data';
 import chartGroups from './chartTypes';
 import { id } from './id';
-
+import { ActionSheetController } from 'ionic-angular';
 
 /**
  * Generated class for the BranchViewPage page.
@@ -70,7 +70,7 @@ export class BranchViewPage {
     schemeType: string = 'ordinal';
     selectedColorScheme: string;
 
-    constructor() {
+    constructor(public actionSheetCtrl: ActionSheetController) {
         Object.assign(this, {
             countries,
             colorSets,
@@ -150,7 +150,7 @@ export class BranchViewPage {
     }
 
     select(data) {
-        console.log('Item clicked', data);
+        this.presentActionSheet( data.label);
     }
 
     setColorScheme(name) {
@@ -198,6 +198,32 @@ export class BranchViewPage {
 
     toggleExpand(node) {
         console.log('toggle expand', node);
+    }
+
+    presentActionSheet(id) {
+        let actionSheet = this.actionSheetCtrl.create({
+            title: 'Video ' + id,
+            buttons: [
+                {
+                    text: 'Contribute',
+                    handler: () => {
+                        console.log('Destructive clicked');
+                    }
+                },{
+                    text: 'View',
+                    handler: () => {
+                        console.log('Archive clicked');
+                    }
+                },{
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                }
+            ]
+        });
+        actionSheet.present();
     }
 
 }
