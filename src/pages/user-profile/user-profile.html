@@ -6,13 +6,96 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>userProfile</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Profile</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+    <div id="wrapper" style="text-align: center; position: relative;">
+        <br>
+        <div id="yourdiv" style="display: inline-block;">
+            <div>
+                <img width="115px" height="115px"
+                     style="object-fit: cover;border-radius: 50%; margin-left:auto;margin-right:auto; background-color: #fff; padding: 3px;"
+                     src="http://{{ip}}/{{pictureN}}">
+            </div>
+            <h1 style="color: #fff;">{{user.username}}</h1>
+
+        </div>
+    </div>
+
+    <div padding>
+        <ion-segment [(ngModel)]="selectedTab">
+            <ion-segment-button value="info">
+                Info
+            </ion-segment-button>
+
+            <ion-segment-button value="projects" (click)="tabSwitched('projects')">
+                Projects
+            </ion-segment-button>
+        </ion-segment>
+    </div>
+
+    <div [ngSwitch]="selectedTab">
+
+        <div *ngSwitchCase="'info'">
+            <div *ngIf="user">
+                <ion-card>
+
+                    <ion-card-content>
+                        <ion-list>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>Name</ion-label>
+                                <ion-input type="text" disabled value="{{user.name}}"></ion-input>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>Username</ion-label>
+                                <ion-input type="text" disabled value="{{user.username}}"></ion-input>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>E-mail</ion-label>
+                                <ion-input type="text" disabled value="{{user.email}}"></ion-input>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>Registered on</ion-label>
+                                <ion-input type="text" disabled value="{{user.dateRegistered}}"></ion-input>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>Projects owned</ion-label>
+                                <ion-input type="text" disabled value="{{user.projectsOwned}}"></ion-input>
+                            </ion-item>
+
+                            <ion-item>
+                                <ion-label fixed class='fixedLabel' color="primary" fixed>Projects contributing to
+                                </ion-label>
+                                <ion-input type="text" disabled value="{{user.projectsContributing}}"></ion-input>
+                            </ion-item>
+
+                        </ion-list>
+                    </ion-card-content>
+
+                </ion-card>
+
+            </div>
+        </div>
+
+        <div *ngSwitchCase="'projects'">
+
+            <div *ngIf="projectList.length > 0">
+                <project-view *ngFor="let p of projectList" [project]="p"></project-view>
+            </div>
+
+        </div>
+
+    </div>
 
 </ion-content>

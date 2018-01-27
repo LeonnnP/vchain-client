@@ -6,13 +6,50 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>projectView</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>{{project.title}}</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+    <div class="image">
+        <img style="object-fit: cover; width:100%; height: 100%;"
+             src="{{project.imageSrc}}"/>
+    </div>
+
+    <h1>{{project.title}}</h1>
+    <h3>{{project.description}}</h3>
+
+
+    <p><i>{{project.numberOfContributors}} contributors</i></p>
+    <p><i>{{project.branches.length}} branches</i></p>
+
+    <button ion-button round>View project tree</button>
+
+    <h2>Branches</h2>
+    <hr>
+
+    <ion-list>
+        <ion-item-sliding #slidingItem *ngFor="let b of project.branches">
+            <ion-item #item (click)="openOption(slidingItem, item)">
+                <h2>{{b.name}}</h2>
+            </ion-item>
+
+            <ion-item-options side="right" (click)="closeOption()">
+                <button ion-button>View</button>
+                <button ion-button color="danger">Contribute</button>
+            </ion-item-options>
+
+        </ion-item-sliding>
+    </ion-list>
+
+    <br>
+
+    <h2>Contributors</h2>
+
+
 
 </ion-content>

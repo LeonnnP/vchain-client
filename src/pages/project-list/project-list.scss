@@ -1,3 +1,31 @@
 page-project-list {
+  .filters {
 
+    ion-col {
+      text-align: center;
+      font-size: 1.6rem;
+      line-height: 1.6rem;
+
+      ion-icon {
+        color: #ccc;
+      }
+
+      &.col-with-arrow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    p {
+      color: black;
+      margin: 0;
+      font-size: 1.6rem;
+      line-height: 1.6rem;
+    }
+
+    .selected {
+      font-weight: 700;
+    }
+  }
 }

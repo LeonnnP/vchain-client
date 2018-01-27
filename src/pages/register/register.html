@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title color="blue">
-      Login
+      Register
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -12,9 +12,20 @@
     <ion-list>
 
       <ion-item>
+        <ion-label floating>Name</ion-label>
+        <ion-input type="text" [(ngModel)]="name" name="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
         <ion-label floating>Username</ion-label>
         <ion-input type="text" [(ngModel)]="username" name="username"></ion-input>
       </ion-item>
+
+      <ion-item>
+        <ion-label floating>E-mail</ion-label>
+        <ion-input type="text" [(ngModel)]="email" name="email"></ion-input>
+      </ion-item>
+
 
       <ion-item>
         <ion-label floating>Password</ion-label>
@@ -23,14 +34,9 @@
 
     </ion-list>
 
-    <ion-row>
-      <ion-col class="signup-col">
-        <button ion-button (click)="login()" color="primary" block>Sign In</button>
-        <br>
-        <button ion-button block clear (click)="register()">Create New Account</button>
-      </ion-col>
-    </ion-row>
-
+    <div padding>
+      <button ion-button (click)="register()" color="primary" block>Register</button>
+    </div>
   </div>
 
 </ion-content>

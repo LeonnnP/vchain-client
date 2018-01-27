@@ -1,22 +1,51 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import {Component, ViewChild} from '@angular/core';
+import {Nav, Platform} from 'ionic-angular';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
 
 import {LoginPage} from "../pages/login/login";
+import {ProjectAddPage} from "../pages/project-add/project-add";
+import {UserProfilePage} from "../pages/user-profile/user-profile";
+import {AuthServiceProvider} from "../providers/auth-service/auth-service";
+import {ProjectListPage} from "../pages/project-list/project-list";
 
 @Component({
-  templateUrl: 'app.html'
+    templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = LoginPage;
+    @ViewChild(Nav) nav: Nav;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
-    });
-  }
+    rootPage: any = ProjectListPage;
+    pages: Array<{ title: string }>;
+
+    constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private authService: AuthServiceProvider) {
+        platform.ready().then(() => {
+            // Okay, so the platform is ready and our plugins are available.
+            // Here you can do any higher level native things you might need.
+            statusBar.styleDefault();
+            splashScreen.hide();
+        });
+
+        this.pages = [
+            {title: 'Add project'},
+            {title: 'Profile'}
+        ];
+    }
+
+    openPage(page) {
+        switch (page) {
+            case 'Add project':
+                this.nav.push(ProjectAddPage);
+                break;
+
+            case 'Profile':
+                this.nav.push(UserProfilePage, {userID: 0});
+                break;
+
+            case 'Logout':
+                this.authService.logout();
+                this.nav.push(LoginPage);
+                break;
+        }
+    }
 }

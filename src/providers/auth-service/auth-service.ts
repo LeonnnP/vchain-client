@@ -22,13 +22,13 @@ export class AuthServiceProvider {
 
     // dobi token uporabnika
     loadToken() {
-        this.authToken = localStorage.getItem('id_token');
+        this.authToken = localStorage.getItem('vch_token');
     }
 
     // je uporabnik prijavljen?
     loggedIn() {
         this.loadToken();
-        return tokenNotExpired('id_token');
+        return tokenNotExpired('vch_token');
     }
 
     // dobi podatke o profilu uporabnika
@@ -43,10 +43,15 @@ export class AuthServiceProvider {
     }
 
     // avtentificiraj uporabnika
-    authenticateUser(user): Observable<any> {
+    authenticateUser(username, password): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json'
         });
+
+        const user = {
+            username: username,
+            password: password
+        };
 
         return this.http.post('http://' + IPConfig.SERVER_IP + '/users/authenticate', user, {headers: headers});
     }
@@ -54,10 +59,32 @@ export class AuthServiceProvider {
     // shranimo token v local storage
     storeUserData(token, user) {
         // id token is where authorization looks at for tolken
-        localStorage.setItem('id_token', token);
+        localStorage.setItem('vch_token', token);
         localStorage.setItem('user', JSON.stringify(user));
         this.authToken = token;
         this.user = user;
+    }
+
+    registerUser(name, username, email, password): Observable<any> {
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+
+        const user = {
+            name: name,
+            username: username,
+            email: email,
+            password: password
+        };
+
+        return this.http.post('http://' + IPConfig.SERVER_IP + '/users/register', user, {headers: headers});
+    }
+
+    logout() {
+        this.authToken = null;
+        this.user = null;
+        localStorage.clear();
     }
 
 }

@@ -1,3 +1,10 @@
 page-user-profile {
+  #wrapper {
+    background-color: map_get($colors, primary)
+  }
 
+  .fixedLabel{
+    min-width: 40% !important;
+    max-width: 40% !important;
+  }
 }

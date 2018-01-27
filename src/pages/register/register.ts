@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {AlertController, IonicPage, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
-import {ProjectListPage} from "../project-list/project-list";
 import {AuthServiceProvider} from "../../providers/auth-service/auth-service";
-import {RegisterPage} from "../register/register";
+import {ProjectListPage} from "../project-list/project-list";
+
 /**
- * Generated class for the LoginPage page.
+ * Generated class for the RegisterPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -12,56 +12,62 @@ import {RegisterPage} from "../register/register";
 
 @IonicPage()
 @Component({
-    selector: 'page-login',
-    templateUrl: 'login.html',
+    selector: 'page-register',
+    templateUrl: 'register.html',
 })
-export class LoginPage {
+export class RegisterPage {
 
     loading: Loading;
     username: String;
     password: String;
+    email: String;
+    name: String;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthServiceProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
     }
 
     ngOnInit() {
-
-        if (this.authService.loggedIn()) {
-            this.navCtrl.setRoot(ProjectListPage);
-        }
     }
 
-    public login() {
-
-        // mock start
-        this.navCtrl.setRoot(ProjectListPage);
-        return;
-        // mock end
-        /*
+    public register() {
         this.showLoading();
+        const user = {
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            name: this.name,
+        };
 
-        if (this.username == undefined || this.username.length == 0) {
+        if (user.name == undefined || user.name.length == 0) {
+            this.showError("Please enter a name!");
+            return;
+        }
+        else if (user.username == undefined || user.username.length == 0) {
             this.showError("Please enter an username!");
             return;
         }
-        else if (this.password == undefined || this.password.length == 0) {
+        else if (user.password == undefined || user.password.length == 0) {
             this.showError("Please enter a password!");
+            return;
+        }
+        else if (user.email == undefined || user.email.length == 0) {
+            this.showError("Please enter an email!");
             return;
         }
 
 
-        this.authService.authenticateUser(this.username, this.password).subscribe(
+        this.authService.registerUser(this.name, this.username, this.email, this.password).subscribe(
             data => {
                 if (data.success) {
                     this.authService.storeUserData(data.token, data.user);
-                    this.navCtrl.setRoot(TabsPage);
+                    this.navCtrl.pop();
                 } else {
-                    this.showError("Login failed, try again");
+                    this.showError("Register failed, try again");
                 }
             },
             error2 => {
                 this.showError("Error connecting to server!");
-            }); */
+            });
     }
 
     showLoading() {
@@ -82,10 +88,6 @@ export class LoginPage {
         });
 
         alert.present(prompt);
-    }
-
-    register() {
-        this.navCtrl.push(RegisterPage);
     }
 
 }
