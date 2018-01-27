@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {AlertController, IonicPage, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {Project} from "../../classes/Project";
+import {User} from "../../classes/User";
 
 /**
  * Generated class for the UserProfilePage page.
@@ -17,14 +18,14 @@ import {Project} from "../../classes/Project";
 export class UserProfilePage {
 
     receiveObject;
-    user;
+    user: User;
     selectedTab = 'info';
     projectList: Array<Project> = [];
     loading: Loading;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
                 private loadingCtrl: LoadingController) {
-        this.receiveObject = this.navParams.get('userID');
+        this.user = this.navParams.get('userID');
 
         /// TODO: get user from service
         this.user = {
@@ -33,7 +34,10 @@ export class UserProfilePage {
             email: 'leon.leonie@leon.com',
             projectsOwned: 3,
             projectsContributing: 5,
-            dateRegistered: '1. 1. 1999'
+            dateRegistered: '1. 1. 1999',
+            profilePicSource: '',
+            password: '',
+            id: '123'
         }
 
     }
@@ -47,7 +51,7 @@ export class UserProfilePage {
                     this.showLoading();
 
                     for(let i=0; i<6; i++) {
-                        this.projectList.push({branches: [], id: 0, title: 'Project ' + i, numberOfContributors: i + 2, description: 'Description of project ' + i,
+                        this.projectList.push({contributors: [], branches: [], id: 0, title: 'Project ' + i, numberOfContributors: i + 2, description: 'Description of project ' + i,
                             imageSrc: 'https://vignette.wikia.nocookie.net/austinally/images/1/14/Random_picture_of_shark.png/revision/latest?cb=20150911004230'});
                     }
 

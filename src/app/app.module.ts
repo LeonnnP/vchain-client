@@ -19,6 +19,11 @@ import { HttpClientModule } from '@angular/common/http';
 import {ProjectAddPage} from "../pages/project-add/project-add";
 import {ProjectViewComponent} from "../components/project-view/project-view";
 
+import {NgxGraphModule} from "@swimlane/ngx-graph"
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MediaCapture} from '@ionic-native/media-capture';
+
 @NgModule({
     declarations: [
         MyApp,
@@ -33,8 +38,11 @@ import {ProjectViewComponent} from "../components/project-view/project-view";
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         IonicModule.forRoot(MyApp),
-        HttpClientModule
+        HttpClientModule,
+        NgxGraphModule,
+        NgxChartsModule
     ],
     bootstrap: [IonicApp],
     entryComponents: [
@@ -52,7 +60,8 @@ import {ProjectViewComponent} from "../components/project-view/project-view";
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         AuthServiceProvider,
-        ProjectServiceProvider
+        ProjectServiceProvider,
+        MediaCapture
     ]
 })
 export class AppModule {

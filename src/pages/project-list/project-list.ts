@@ -65,7 +65,7 @@ export class ProjectListPage {
         this.projectList = [];
 
         for(let i=0; i<6; i++) {
-            this.projectList.push({branches: [], id: 0, title: 'Project ' + i, numberOfContributors: i + 2, description: 'Description of project ' + i, imageSrc: 'https://vignette.wikia.nocookie.net/austinally/images/1/14/Random_picture_of_shark.png/revision/latest?cb=20150911004230'});
+            this.projectList.push({branches: [], contributors: [], id: 0, title: 'Project ' + i, numberOfContributors: i + 2, description: 'Description of project ' + i, imageSrc: 'https://vignette.wikia.nocookie.net/austinally/images/1/14/Random_picture_of_shark.png/revision/latest?cb=20150911004230'});
         }
 
         this.loading.dismiss();

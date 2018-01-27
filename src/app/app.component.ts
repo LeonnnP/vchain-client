@@ -8,6 +8,7 @@ import {ProjectAddPage} from "../pages/project-add/project-add";
 import {UserProfilePage} from "../pages/user-profile/user-profile";
 import {AuthServiceProvider} from "../providers/auth-service/auth-service";
 import {ProjectListPage} from "../pages/project-list/project-list";
+import {BranchViewPage} from "../pages/branch-view/branch-view"
 
 @Component({
     templateUrl: 'app.html'

@@ -27,29 +27,37 @@
     <p><i>{{project.numberOfContributors}} contributors</i></p>
     <p><i>{{project.branches.length}} branches</i></p>
 
-    <button ion-button round>View project tree</button>
+    <button ion-button round (click)="viewTree()">View project tree</button>
 
     <h2>Branches</h2>
     <hr>
 
     <ion-list>
-        <ion-item-sliding #slidingItem *ngFor="let b of project.branches">
-            <ion-item #item (click)="openOption(slidingItem, item)">
+            <ion-item *ngFor="let b of project.branches">
                 <h2>{{b.name}}</h2>
+                <div item-content>
+                    <button ion-button>View</button>
+                    <button ion-button color="danger">Contribute</button>
+                </div>
             </ion-item>
 
-            <ion-item-options side="right" (click)="closeOption()">
-                <button ion-button>View</button>
-                <button ion-button color="danger">Contribute</button>
-            </ion-item-options>
-
-        </ion-item-sliding>
     </ion-list>
 
     <br>
 
     <h2>Contributors</h2>
 
-
+    <ion-list>
+        <ion-item *ngFor="let c of project.contributors">
+            <ion-avatar item-start>
+                <img src="{{c.profilePicSource}}">
+            </ion-avatar>
+            <h2>{{c.username}}</h2>
+            <h3>{{c.email}}</h3>
+            <div item-content>
+                <button (click)="viewProfile(c)" ion-button>View profile</button>
+            </div>
+        </ion-item>
+    </ion-list>
 
 </ion-content>

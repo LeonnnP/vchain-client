@@ -4,6 +4,9 @@ import {
     NavParams
 } from 'ionic-angular';
 import {Project} from "../../classes/Project";
+import {User} from "../../classes/User";
+import {UserProfilePage} from "../user-profile/user-profile";
+import {BranchViewPage} from "../branch-view/branch-view";
 
 /**
  * Generated class for the ProjectViewPage page.
@@ -30,9 +33,14 @@ export class ProjectViewPage {
         /// TODO: mock
         this.showLoading();
         this.project.branches = [];
+        this.project.contributors = [];
 
         for(let i=0; i<3; i++){
-            this.project.branches.push({id: 0, name: 'Branch number ' + i})
+            this.project.branches.push({id: i, name: 'Branch number ' + i})
+        }
+
+        for(let i=0; i<12; i++){
+            this.project.contributors.push(new User(i, 'User ' + i, 'Username' + i, 'test@mail.com' + i, 'http://laoblogger.com/images/default-profile-picture-5.jpg'))
         }
 
         this.loading.dismiss();
@@ -59,7 +67,6 @@ export class ProjectViewPage {
     }
 
     openOption(itemSlide: ItemSliding, item: Item) {
-        console.log('opening item slide..');
 
         if(this.activeItemSliding!==null) //use this if only one active sliding item allowed
             this.closeOption();
@@ -78,12 +85,18 @@ export class ProjectViewPage {
     }
 
     closeOption() {
-        console.log('closing item slide..');
-
         if (this.activeItemSliding) {
             this.activeItemSliding.close();
             this.activeItemSliding = null;
         }
+    }
+
+    viewProfile(contrib: User){
+        this.navCtrl.push(UserProfilePage, {user: contrib})
+    }
+
+    viewTree(){
+        this.navCtrl.push(BranchViewPage)
     }
 
 }
