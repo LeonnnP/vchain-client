@@ -16,7 +16,7 @@ import {BranchViewPage} from "../pages/branch-view/branch-view"
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = ProjectListPage;
+    rootPage: any = LoginPage;
     pages: Array<{ title: string }>;
 
     constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private authService: AuthServiceProvider) {

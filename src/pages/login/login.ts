@@ -33,11 +33,6 @@ export class LoginPage {
 
     public login() {
 
-        // mock start
-        this.navCtrl.setRoot(ProjectListPage);
-        return;
-        // mock end
-        /*
         this.showLoading();
 
         if (this.username == undefined || this.username.length == 0) {
@@ -54,14 +49,14 @@ export class LoginPage {
             data => {
                 if (data.success) {
                     this.authService.storeUserData(data.token, data.user);
-                    this.navCtrl.setRoot(TabsPage);
+                    this.navCtrl.setRoot(ProjectListPage);
                 } else {
                     this.showError("Login failed, try again");
                 }
             },
             error2 => {
                 this.showError("Error connecting to server!");
-            }); */
+            });
     }
 
     showLoading() {

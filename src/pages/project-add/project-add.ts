@@ -8,6 +8,8 @@ import {
     CaptureVideoOptions
 } from '@ionic-native/media-capture';
 import {VideoPlayer} from '@ionic-native/video-player';
+import {File} from '@ionic-native/file';
+import {ProjectServiceProvider} from "../../providers/project-service/project-service";
 
 /**
  * Generated class for the ProjectAddPage page.
@@ -28,12 +30,19 @@ export class ProjectAddPage {
     videoDescription: string = '';
     videoTitle: string = '';
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private mediaCapture: MediaCapture) {
+    constructor(private projectService: ProjectServiceProvider, private file: File, public navCtrl: NavController, public navParams: NavParams, private mediaCapture: MediaCapture) {
 
     }
 
     ngOnInit() {
-        this.videoURL = '';
+        this.videoURL = 'http://164.8.252.155:7456/pictures/fc71af88b05cf1e00f846951355ef24f';
+
+
+        let video = this.myVideo.nativeElement;
+
+        video.src = this.videoURL;
+        video.play();
+
     }
 
     public takeVideo() {
@@ -51,9 +60,22 @@ export class ProjectAddPage {
 
                     video.src = this.videoURL;
                     video.play();
-                },
-                (err: CaptureError) => console.error(err)
-            );
+
+                    let index = data[0].fullPath.lastIndexOf('/'), finalPath = data[0].fullPath.substr(0, index);
+                    this.file.readAsArrayBuffer(finalPath, data[0].name).then((file) => {
+
+                            let blob = new Blob([file], {type: data[0].type});
+                            let f = this.projectService.blobToFile(blob, data[0].name);
+
+                            this.projectService.addPicture("tutke", blob).subscribe(function(){
+                                console.log('asd')
+                            })
+
+                        },
+                        (err: CaptureError) => console.error(err)
+                    );
+                });
     }
+
 
 }

@@ -23,6 +23,7 @@ import {NgxGraphModule} from "@swimlane/ngx-graph"
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MediaCapture} from '@ionic-native/media-capture';
+import {File} from "@ionic-native/file";
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import {MediaCapture} from '@ionic-native/media-capture';
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         AuthServiceProvider,
         ProjectServiceProvider,
-        MediaCapture
+        MediaCapture,
+        File
     ]
 })
 export class AppModule {
