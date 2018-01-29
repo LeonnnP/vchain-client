@@ -30,12 +30,11 @@ export class ProjectListPage {
 
     loading: Loading;
 
-    constructor(private authService: AuthServiceProvider, private projectService: ProjectServiceProvider, public injector: Injector,  private alertCtrl: AlertController,
+    constructor(private projectService: ProjectServiceProvider, public injector: Injector,  private alertCtrl: AlertController,
                 private loadingCtrl: LoadingController) {
     }
 
     ngOnInit(){
-        this.authService.logout();
 
         this.projectService.getTags().subscribe(
             data => {
