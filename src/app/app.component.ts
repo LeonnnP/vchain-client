@@ -29,7 +29,8 @@ export class MyApp {
 
         this.pages = [
             {title: 'Add project'},
-            {title: 'Profile'}
+            {title: 'Profile'},
+            {title: 'Logout'}
         ];
     }
 
@@ -40,12 +41,12 @@ export class MyApp {
                 break;
 
             case 'Profile':
-                this.nav.push(UserProfilePage, {userID: 0});
+                this.nav.push(UserProfilePage, {userID: JSON.parse(localStorage.getItem('user')).id});
                 break;
 
             case 'Logout':
                 this.authService.logout();
-                this.nav.push(LoginPage);
+                this.nav.setRoot(LoginPage);
                 break;
         }
     }

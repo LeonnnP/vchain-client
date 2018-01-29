@@ -2,6 +2,8 @@ import {Component, Injector, ViewChild} from '@angular/core';
 import {AlertController, IonicPage, Loading, LoadingController, Slides} from 'ionic-angular';
 import {Tag} from "../../classes/Tag";
 import {Project} from "../../classes/Project";
+import {ProjectServiceProvider} from "../../providers/project-service/project-service";
+import {AuthServiceProvider} from "../../providers/auth-service/auth-service";
 
 /**
  * Generated class for the ProjectListPage page.
@@ -20,31 +22,38 @@ export class ProjectListPage {
     @ViewChild(Slides) slides: Slides;
 
     selectedTag: Tag;
-    tags: Array<Tag> = [];
+    tags = [];
     showLeftButton: boolean;
     showRightButton: boolean;
 
-    projectList: Array<Project> = [];
+    projectList = [];
 
     loading: Loading;
 
-    constructor(public injector: Injector,  private alertCtrl: AlertController,
+    constructor(private authService: AuthServiceProvider, private projectService: ProjectServiceProvider, public injector: Injector,  private alertCtrl: AlertController,
                 private loadingCtrl: LoadingController) {
     }
 
     ngOnInit(){
+        this.authService.logout();
 
-        // mock start
-        this.tags.push({arrayIndex: 0, id: 0, name: "test"});
-        this.tags.push({arrayIndex: 1, id: 1, name: "test1"});
-        this.tags.push({arrayIndex: 2, id: 2, name: "test2"});
-        this.tags.push({arrayIndex: 3, id: 3, name: "test3"});
-        this.tags.push({arrayIndex: 4, id: 4, name: "test4"});
-        // mock end
+        this.projectService.getTags().subscribe(
+            data => {
+                if (data.success) {
+                    this.tags = data.result;
+                    for(let i=0; i<this.tags.length; i++){
+                        this.tags[i].arrayIndex = i;
+                    }
 
-        this.initializeCategories();
-
-        this.filterData(0);
+                    this.initializeCategories();
+                    this.filterData(0);
+                } else {
+                    console.log("User profile failed to load!");
+                }
+            },
+            error2 => {
+                console.log("Error connecting to server!");
+            });
     }
 
     private initializeCategories(): void {
@@ -59,16 +68,19 @@ export class ProjectListPage {
         if(this.selectedTag != undefined && this.selectedTag.name == this.tags[categoryId].name) return;
 
         this.selectedTag = this.tags[categoryId];
-
-        /// TODO: mock
-        this.showLoading();
-        this.projectList = [];
-
-        for(let i=0; i<6; i++) {
-            this.projectList.push({branches: [], contributors: [], id: 0, title: 'Project ' + i, numberOfContributors: i + 2, description: 'Description of project ' + i, imageSrc: 'https://vignette.wikia.nocookie.net/austinally/images/1/14/Random_picture_of_shark.png/revision/latest?cb=20150911004230'});
-        }
-
-        this.loading.dismiss();
+        this.projectService.getVideoByTag(this.selectedTag._key).subscribe(
+            data => {
+                if (data.success) {
+                    this.projectList = [];
+                    this.projectList = data.result;
+                    console.log(this.projectList)
+                } else {
+                    this.showError("User profile failed to load!");
+                }
+            },
+            error2 => {
+                this.showError("Error connecting to server!");
+            });
     }
 
     // Method executed when the slides are changed

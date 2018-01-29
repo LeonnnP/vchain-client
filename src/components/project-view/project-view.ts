@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Project} from "../../classes/Project";
 import {NavController} from "ionic-angular";
 import {ProjectViewPage} from "../../pages/project-view/project-view";
+import {IPConfig} from "../../providers/ipconfig";
 
 /**
  * Generated class for the ProjectViewComponent component.
@@ -16,10 +17,17 @@ import {ProjectViewPage} from "../../pages/project-view/project-view";
 export class ProjectViewComponent {
 
     @Input()
-    project: Project;
+    project;
+
+    ip: string;
 
     constructor(public navCtrl: NavController) {
 
+        this.ip = IPConfig.SERVER_IP;
+    }
+
+    ngOnInit(){
+        console.log(this.project);
     }
 
     onProjectClick(){

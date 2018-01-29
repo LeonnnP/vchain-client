@@ -1,6 +1,6 @@
 export class Tag
 {
-    id: number;
+    _key: string;
     arrayIndex: number;
     name: string;
 }

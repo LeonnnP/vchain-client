@@ -7,12 +7,21 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>videoView</ion-title>
+    <ion-title>Watch project</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+  <video [hidden]="linkList.length == 0" #myvideo controls="controls" preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline"
+         style="width: 100%; height: 100%;" class="videoPlayer"></video>
+
+  <div style="width:100%;">
+    <button (click)="goLeft()" left>Go left</button>
+    <button (click)="goLeft()" middle>Close</button>
+    <button (click)="goRight()" right>Go right</button>
+  </div>
 
 </ion-content>

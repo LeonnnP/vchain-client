@@ -1,5 +1,5 @@
-<ion-card (click)="onProjectClick()">
-  <img src="{{project.imageSrc}}"/>
+<ion-card *ngIf="project" (click)="onProjectClick()">
+  <img style="width: 100%; height: 300px; object-fit: cover;" src="{{'http://' + ip + '/' + project.image}}"/>
   <div class="card-title">{{project.title}}</div>
   <div class="card-subtitle">{{project.description}}</div>
 </ion-card>

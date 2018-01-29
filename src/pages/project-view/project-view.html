@@ -16,16 +16,17 @@
 <ion-content padding>
 
     <div class="image">
-        <img style="object-fit: cover; width:100%; height: 100%;"
-             src="{{project.imageSrc}}"/>
+        <img style="display:block; object-fit: cover; width:100%; height: 300px;"
+             src="{{'http://' + ip + '/' + project.image}}"/>
     </div>
-
+    <br>
+    <br>
     <h1>{{project.title}}</h1>
     <h3>{{project.description}}</h3>
 
 
-    <p><i>{{project.numberOfContributors}} contributors</i></p>
-    <p><i>{{project.branches.length}} branches</i></p>
+    <p><i>{{project.contributors.length}} contributor<span *ngIf="project.contributors.length > 2">s</span></i></p>
+    <p><i>{{project.branches.length}} branch<span *ngIf="project.contributors.length > 2">es</span></i></p>
 
     <button ion-button round (click)="viewTree()">View project tree</button>
 
@@ -34,10 +35,10 @@
 
     <ion-list>
             <ion-item *ngFor="let b of project.branches">
-                <h2>{{b.name}}</h2>
+                <h2>{{b.title}}</h2>
                 <div item-content>
-                    <button ion-button>View</button>
-                    <button ion-button color="danger">Contribute</button>
+                    <button ion-button (click)="openVideoView(b._key)">View</button>
+                    <button ion-button color="danger" (click)="contrib(b._key)">Contribute</button>
                 </div>
             </ion-item>
 
@@ -50,7 +51,7 @@
     <ion-list>
         <ion-item *ngFor="let c of project.contributors">
             <ion-avatar item-start>
-                <img src="{{c.profilePicSource}}">
+                <img src="{{'http://' + ip + '/videos/default-profile-picture-5.jpg'}}">
             </ion-avatar>
             <h2>{{c.username}}</h2>
             <h3>{{c.email}}</h3>

@@ -24,7 +24,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MediaCapture} from '@ionic-native/media-capture';
 import {File} from "@ionic-native/file";
-
+import { VideoEditor } from '@ionic-native/video-editor';
+import {VideoViewPage} from "../pages/video-view/video-view";
 @NgModule({
     declarations: [
         MyApp,
@@ -35,6 +36,7 @@ import {File} from "@ionic-native/file";
         UserProfilePage,
         RegisterPage,
         ProjectAddPage,
+        VideoViewPage,
         ProjectViewComponent
     ],
     imports: [
@@ -54,7 +56,8 @@ import {File} from "@ionic-native/file";
         ProjectViewPage,
         UserProfilePage,
         RegisterPage,
-        ProjectAddPage
+        ProjectAddPage,
+        VideoViewPage
     ],
     providers: [
         StatusBar,
@@ -63,7 +66,8 @@ import {File} from "@ionic-native/file";
         AuthServiceProvider,
         ProjectServiceProvider,
         MediaCapture,
-        File
+        File,
+        VideoEditor
     ]
 })
 export class AppModule {

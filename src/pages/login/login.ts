@@ -33,7 +33,7 @@ export class LoginPage {
 
     public login() {
 
-        this.showLoading();
+        // this.showLoading();
 
         if (this.username == undefined || this.username.length == 0) {
             this.showError("Please enter an username!");

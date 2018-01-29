@@ -4,5 +4,5 @@
 export class IPConfig
 {
     // 164.8.252.155
-    static SERVER_IP = "localhost:8080"
+    static SERVER_IP = "164.8.252.155:8080"
 }

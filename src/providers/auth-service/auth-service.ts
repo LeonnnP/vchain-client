@@ -32,14 +32,14 @@ export class AuthServiceProvider {
     }
 
     // dobi podatke o profilu uporabnika
-    getProfile() {
+    getProfile(key): Observable<any> {
         this.loadToken();
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authToken
         });
 
-        return this.http.get('http://' + IPConfig.SERVER_IP + '/users/profile', {headers: headers});
+        return this.http.get('http://' + IPConfig.SERVER_IP + '/users/details/' + key, {headers: headers});
     }
 
     // avtentificiraj uporabnika

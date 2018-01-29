@@ -10,7 +10,7 @@ import {
 import {VideoPlayer} from '@ionic-native/video-player';
 import {File} from '@ionic-native/file';
 import {ProjectServiceProvider} from "../../providers/project-service/project-service";
-
+import { VideoEditor } from '@ionic-native/video-editor';
 /**
  * Generated class for the ProjectAddPage page.
  *
@@ -29,20 +29,95 @@ export class ProjectAddPage {
     videoURL: any = '';
     videoDescription: string = '';
     videoTitle: string = '';
+    loaded = false;
+    loaddata = null;
+    fileObj = null;
+    tagKey = '';
+    tags = [];
+    contribKey = null;
 
-    constructor(private projectService: ProjectServiceProvider, private file: File, public navCtrl: NavController, public navParams: NavParams, private mediaCapture: MediaCapture) {
-
+    constructor(private videoEditor: VideoEditor, private projectService: ProjectServiceProvider, private file: File, public navCtrl: NavController, public navParams: NavParams, private mediaCapture: MediaCapture) {
+        this.contribKey = this.navParams.get('contribKey')
     }
 
     ngOnInit() {
-        this.videoURL = 'http://164.8.252.155:7456/pictures/fc71af88b05cf1e00f846951355ef24f';
+        this.videoURL = '';
 
+        this.projectService.getTags().subscribe(
+            data => {
+                if (data.success) {
+                    this.tags = data.result;
+                    for(let i=0; i<this.tags.length; i++){
+                        this.tags[i].arrayIndex = i;
+                    }
 
-        let video = this.myVideo.nativeElement;
+                }
+            });
+    }
 
-        video.src = this.videoURL;
-        video.play();
+    addProject(){
 
+        if(this.fileObj == null) return;
+
+        var self = this;
+        if(this.contribKey == undefined) {
+            this.videoEditor.createThumbnail(
+                {
+                    fileUri: self.videoURL,
+                    outputFileName: "12345",
+                    atTime: 2,
+                    width: 320,
+                    height: 480,
+                    quality: 100
+                }).then(
+                (URLdata) => { // file:///storage..
+                    URLdata = "file:///" + URLdata;
+                    self.loaddata = URLdata;
+                    let indexX = URLdata.lastIndexOf('/'), finalPath2 = URLdata.substr(0, indexX);
+
+                    this.file.readAsArrayBuffer(finalPath2, "12345.jpg").then((imageFile) => {
+
+                            let blob = new Blob([imageFile], {type: 'image/jpg'});
+                            let fileImage = this.projectService.blobToFile(blob, "12345.jpg");
+
+                            let index = self.fileObj.fullPath.lastIndexOf('/'),
+                                finalPath = self.fileObj.fullPath.substr(0, index);
+
+                            self.file.readAsArrayBuffer(finalPath, self.fileObj.name).then((file) => {
+
+                                    let blob2 = new Blob([file], {type: self.fileObj.type});
+                                    let fileVideo = self.projectService.blobToFile(blob2, self.fileObj.name);
+
+                                    this.projectService.addVideoRoot(this.videoTitle, this.tagKey, this.videoDescription, fileImage, fileVideo).subscribe(function () {
+                                        self.navCtrl.pop();
+                                    })
+
+                                },
+                                (err: CaptureError) => console.error(err)
+                            );
+                        },
+                        (err) => {
+                            self.loaddata = err;
+                        })
+                });
+        }
+        else{
+            let index = self.fileObj.fullPath.lastIndexOf('/'),
+                finalPath = self.fileObj.fullPath.substr(0, index);
+
+            self.file.readAsArrayBuffer(finalPath, self.fileObj.name).then((file) => {
+
+                    let blob2 = new Blob([file], {type: self.fileObj.type});
+                    let fileVideo = self.projectService.blobToFile(blob2, self.fileObj.name);
+
+                    this.projectService.appendToVideo(this.contribKey, fileVideo, this.videoTitle).subscribe(function () {
+                        self.navCtrl.pop();
+                    })
+
+                },
+                (err: CaptureError) => console.error(err)
+            );
+        }
     }
 
     public takeVideo() {
@@ -56,24 +131,17 @@ export class ProjectAddPage {
 
                     this.videoURL = res1[0]['fullPath'];
 
-                    let video = this.myVideo.nativeElement;
+                    var video = this.myVideo.nativeElement;
 
                     video.src = this.videoURL;
                     video.play();
 
-                    let index = data[0].fullPath.lastIndexOf('/'), finalPath = data[0].fullPath.substr(0, index);
-                    this.file.readAsArrayBuffer(finalPath, data[0].name).then((file) => {
+                    this.fileObj = {
+                        fullPath: data[0].fullPath,
+                        name: data[0].name,
+                        type: data[0].type
+                    }
 
-                            let blob = new Blob([file], {type: data[0].type});
-                            let f = this.projectService.blobToFile(blob, data[0].name);
-
-                            this.projectService.addPicture("tutke", blob).subscribe(function(){
-                                console.log('asd')
-                            })
-
-                        },
-                        (err: CaptureError) => console.error(err)
-                    );
                 });
     }
 

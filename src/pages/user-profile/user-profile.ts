@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AlertController, IonicPage, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {Project} from "../../classes/Project";
 import {User} from "../../classes/User";
+import {AuthServiceProvider} from "../../providers/auth-service/auth-service";
 
 /**
  * Generated class for the UserProfilePage page.
@@ -17,28 +18,28 @@ import {User} from "../../classes/User";
 })
 export class UserProfilePage {
 
-    receiveObject;
-    user: User;
+    user: User = null;
     selectedTab = 'info';
     projectList: Array<Project> = [];
     loading: Loading;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
-                private loadingCtrl: LoadingController) {
-        this.user = this.navParams.get('userID');
+                private loadingCtrl: LoadingController, private userService: AuthServiceProvider) {
+        let userID = this.navParams.get('userID');
 
-        /// TODO: get user from service
-        this.user = {
-            name: 'Leon',
-            username: 'leonie',
-            email: 'leon.leonie@leon.com',
-            projectsOwned: 3,
-            projectsContributing: 5,
-            dateRegistered: '1. 1. 1999',
-            profilePicSource: '',
-            password: '',
-            id: '123'
-        }
+        this.showLoading();
+
+        this.userService.getProfile(userID).subscribe(
+            data => {
+                if (data.success) {
+                    this.user = data.result;
+                } else {
+                    this.showError("User profile failed to load!");
+                }
+            },
+            error2 => {
+                this.showError("Error connecting to server!");
+            });
 
     }
 

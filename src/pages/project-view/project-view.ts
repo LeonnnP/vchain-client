@@ -7,6 +7,10 @@ import {Project} from "../../classes/Project";
 import {User} from "../../classes/User";
 import {UserProfilePage} from "../user-profile/user-profile";
 import {BranchViewPage} from "../branch-view/branch-view";
+import {IPConfig} from "../../providers/ipconfig";
+import {ProjectServiceProvider} from "../../providers/project-service/project-service";
+import {VideoViewPage} from "../video-view/video-view";
+import {ProjectAddPage} from "../project-add/project-add";
 
 /**
  * Generated class for the ProjectViewPage page.
@@ -22,28 +26,43 @@ import {BranchViewPage} from "../branch-view/branch-view";
 })
 export class ProjectViewPage {
 
-    project: Project;
+    project;
     loading: Loading;
     activeItemSliding: ItemSliding = null;
+    ip: string;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
+    constructor(private projectService: ProjectServiceProvider, public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController,
                 private loadingCtrl: LoadingController) {
         this.project = this.navParams.get('project');
 
-        /// TODO: mock
-        this.showLoading();
+        this.ip = IPConfig.SERVER_IP;
+
         this.project.branches = [];
         this.project.contributors = [];
 
-        for(let i=0; i<3; i++){
-            this.project.branches.push({id: i, name: 'Branch number ' + i})
-        }
+        this.projectService.getProjectContributors(this.project._key).subscribe(
+            data => {
+                if (data.success) {
+                    this.project.contributors = data.result;
+                } else {
+                    this.showError("User profile failed to load!");
+                }
+            },
+            error2 => {
+                this.showError("Error connecting to server!");
+            });
 
-        for(let i=0; i<12; i++){
-            this.project.contributors.push(new User(i, 'User ' + i, 'Username' + i, 'test@mail.com' + i, 'http://laoblogger.com/images/default-profile-picture-5.jpg'))
-        }
-
-        this.loading.dismiss();
+        this.projectService.getProjectLeaves(this.project._key).subscribe(
+            data => {
+                if (data.success) {
+                    this.project.branches = data.result;
+                } else {
+                    this.showError("User profile failed to load!");
+                }
+            },
+            error2 => {
+                this.showError("Error connecting to server!");
+            });
     }
 
     showLoading() {
@@ -64,6 +83,14 @@ export class ProjectViewPage {
         });
 
         alert.present(prompt);
+    }
+
+    openVideoView(key){
+        this.navCtrl.push(VideoViewPage, {projectID: key})
+    }
+
+    contrib(key){
+        this.navCtrl.push(ProjectAddPage, {contribKey: key})
     }
 
     openOption(itemSlide: ItemSliding, item: Item) {
