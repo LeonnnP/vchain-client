@@ -35,12 +35,12 @@
                 <ion-input type="text" [(ngModel)]="videoTitle" name="videoTitle"></ion-input>
             </ion-item>
 
-            <ion-item>
+            <ion-item *ngIf="this.contribKey == undefined">
                 <ion-label floating>Description</ion-label>
                 <ion-input type="text" [(ngModel)]="videoDescription" name="videoDescription"></ion-input>
             </ion-item>
 
-            <ion-item *ngIf="tags.length > 0">
+            <ion-item *ngIf="tags.length > 0 && this.contribKey == undefined">
                 <ion-label>Tag</ion-label>
                 <ion-select [(ngModel)]="tagKey">
                     <ion-option *ngFor="let tag of tags" value="{{tag._key}}">{{tag.name}}</ion-option>
@@ -51,7 +51,7 @@
 
         <ion-row>
             <ion-col class="signup-col">
-                <button [disabled]="videoTitle.length == 0 || videoDescription.length == 0 || tagKey.length == 0" ion-button (click)="addProject()" color="primary" block>Add project</button>
+                <button [disabled]="videoTitle.length == 0" ion-button (click)="addProject()" color="primary" block>Add project</button>
             </ion-col>
 
             <ion-col class="signup-col">

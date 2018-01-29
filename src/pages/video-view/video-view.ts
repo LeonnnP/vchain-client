@@ -39,6 +39,10 @@ export class VideoViewPage {
                     video.src = 'http://' + IPConfig.SERVER_IP + '/' + self.linkList[self.counter];
                     video.play();
 
+                    this.projectService.getFile(self.linkList[self.counter].substring(self.linkList[self.counter].indexOf('videos/') + 'videos/'.length, self.linkList[self.counter].length)).subscribe(data => {
+                        console.log(data);
+                    });
+
                     video.addEventListener('ended', function (e) {
                         self.counter = self.counter == 0 ? self.linkList.length - 1 : self.counter - 1;
 

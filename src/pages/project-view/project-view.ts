@@ -123,7 +123,7 @@ export class ProjectViewPage {
     }
 
     viewTree(){
-        this.navCtrl.push(BranchViewPage)
+        this.navCtrl.push(BranchViewPage, {projectKey: this.project._key});
     }
 
 }

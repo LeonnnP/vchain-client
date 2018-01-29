@@ -1,5 +1,5 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {IPConfig} from "../ipconfig";
 import {Observable} from "rxjs/Observable";
 import {AuthServiceProvider} from "../auth-service/auth-service";
@@ -13,8 +13,8 @@ import {AuthServiceProvider} from "../auth-service/auth-service";
 @Injectable()
 export class ProjectServiceProvider {
 
-  constructor(public http: HttpClient, private authService: AuthServiceProvider) {
-  }
+    constructor(public http: HttpClient, private authService: AuthServiceProvider) {
+    }
 
 
     blobToFile(theBlob: Blob, fileName: string): File {
@@ -49,7 +49,6 @@ export class ProjectServiceProvider {
 
     getTags(): Observable<any> {
         this.authService.loadToken();
-        console.log(this.authService.authToken);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authService.authToken
@@ -60,18 +59,16 @@ export class ProjectServiceProvider {
 
     getVideoByTag(tagKey): Observable<any> {
         this.authService.loadToken();
-        console.log(this.authService.authToken);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authService.authToken
         });
 
-        return this.http.get('http://' + IPConfig.SERVER_IP + '/videos/bytagkey/' + tagKey, {headers: headers});
+        return this.http.get('http://' + IPConfig.SERVER_IP + '/videos/rootsbytagkey/' + tagKey, {headers: headers});
     }
 
     getProjectContributors(key): Observable<any> {
         this.authService.loadToken();
-        console.log(this.authService.authToken);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authService.authToken
@@ -82,7 +79,6 @@ export class ProjectServiceProvider {
 
     getProjectLeaves(key): Observable<any> {
         this.authService.loadToken();
-        console.log(this.authService.authToken);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authService.authToken
@@ -93,7 +89,6 @@ export class ProjectServiceProvider {
 
     getProjectVideos(key): Observable<any> {
         this.authService.loadToken();
-        console.log(this.authService.authToken);
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': this.authService.authToken
@@ -115,6 +110,23 @@ export class ProjectServiceProvider {
         formData.append('title', title);
 
         return this.http.post('http://' + IPConfig.SERVER_IP + '/videos/append', formData, {headers: headers});
+    }
+
+
+    getFile(name) {
+        const headers = new HttpHeaders();
+        headers.append('Content-Type', 'video/3gpp');
+        return this.http.get('http://' + IPConfig.SERVER_IP + '/videos/picturevideo/' + name, {headers: headers});
+    }
+
+    getTree(key): Observable<any>{
+        this.authService.loadToken();
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': this.authService.authToken
+        });
+
+        return this.http.get('http://' + IPConfig.SERVER_IP + '/videos/gettree/' + key, {headers: headers});
     }
 
 }

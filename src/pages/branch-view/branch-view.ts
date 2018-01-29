@@ -6,6 +6,9 @@ import { countries, generateHierarchialGraph, getTurbineData } from './data';
 import chartGroups from './chartTypes';
 import { id } from './id';
 import { ActionSheetController } from 'ionic-angular';
+import {ProjectServiceProvider} from "../../providers/project-service/project-service";
+import {VideoViewPage} from "../video-view/video-view";
+import {ProjectAddPage} from "../project-add/project-add";
 
 /**
  * Generated class for the BranchViewPage page.
@@ -37,6 +40,7 @@ export class BranchViewPage {
     height: number = window.innerHeight;
     fitContainer: boolean = true;
     autoZoom: boolean = false;
+    loaded = false;
 
     // options
     showLegend = false;
@@ -69,27 +73,151 @@ export class BranchViewPage {
     colorScheme: any;
     schemeType: string = 'ordinal';
     selectedColorScheme: string;
+    key: string;
 
-    constructor(public actionSheetCtrl: ActionSheetController) {
-        Object.assign(this, {
-            countries,
-            colorSets,
-            chartGroups,
-            hierarchialGraph: getTurbineData(),
+    constructor(private projectService: ProjectServiceProvider, public actionSheetCtrl: ActionSheetController, public navCtrl: NavController, public navParams: NavParams) {
+
+
+        this.key = this.navParams.get('projectKey');
+        this.projectService.getTree(this.key).subscribe(data => {
+            console.log(data);
+
+
+            let nodes = [];
+            let links = [];
+
+            for (let i=0; i<data.result.length; i++) {
+                const node : any = {
+                    "type": "lib",
+                    "runner_type": "python",
+                    "action": "turbine_twitter.get_time_line",
+                    "retries": 2,
+                    "params": {
+                        "asset": "twitter",
+                        "inputs": {
+                            "count": 50
+                        }
+                    },
+                    "publish": {
+                        "pipe": "result"
+                    },
+                    "on-success": [
+                        "get_url_from_text"
+                    ]
+                };
+
+                node.id = data.result[i]._key;
+                node.label = data.result[i].title;
+
+                nodes.push(node);
+            }
+
+            for(let i=0; i<data.result.length; i++){
+
+                if(!data.result[i].isRoot) {
+                    links.push({
+                        source: data.result[i].parent,
+                        target: data.result[i]._key,
+                        label: 'on error'
+                    });
+                }
+            }
+
+            Object.assign(this, {
+                countries,
+                colorSets,
+                chartGroups,
+                hierarchialGraph: {nodes: nodes, links: links},
+            });
+
+            this.setColorScheme('picnic');
+            this.setInterpolationType('Bundle');
+
+            this.selectChart(this.chartType);
+
+            if (!this.fitContainer) {
+                this.applyDimensions();
+            }
+
+            this.loaded = true;
         });
-
-        this.setColorScheme('picnic');
-        this.setInterpolationType('Bundle');
     }
 
     ngOnInit() {
-        this.selectChart(this.chartType);
+    }
 
-        setInterval(this.updateData.bind(this), 1000);
+    openVideoView(key){
+        this.navCtrl.push(VideoViewPage, {projectID: key})
+    }
 
-        if (!this.fitContainer) {
-            this.applyDimensions();
-        }
+    contrib(key){
+        var self = this;
+        this.navCtrl.push(ProjectAddPage, {contribKey: key});
+    }
+
+    hiddenHack(){
+        this.loaded = false;
+
+        this.projectService.getTree(this.key).subscribe(data => {
+
+            let nodes = [];
+            let links = [];
+
+            for (let i=0; i<data.result.length; i++) {
+                const node : any = {
+                    "type": "lib",
+                    "runner_type": "python",
+                    "action": "turbine_twitter.get_time_line",
+                    "retries": 2,
+                    "params": {
+                        "asset": "twitter",
+                        "inputs": {
+                            "count": 50
+                        }
+                    },
+                    "publish": {
+                        "pipe": "result"
+                    },
+                    "on-success": [
+                        "get_url_from_text"
+                    ]
+                };
+
+                node.id = data.result[i]._key;
+                node.label = data.result[i].title;
+
+                nodes.push(node);
+            }
+
+            for(let i=0; i<data.result.length; i++){
+
+                if(!data.result[i].isRoot) {
+                    links.push({
+                        source: data.result[i].parent,
+                        target: data.result[i]._key,
+                        label: 'on error'
+                    });
+                }
+            }
+
+            Object.assign(this, {
+                countries,
+                colorSets,
+                chartGroups,
+                hierarchialGraph: {nodes: nodes, links: links},
+            });
+
+            this.setColorScheme('picnic');
+            this.setInterpolationType('Bundle');
+
+            this.selectChart(this.chartType);
+
+            if (!this.fitContainer) {
+                this.applyDimensions();
+            }
+
+            this.loaded = true;
+        });
     }
 
     updateData() {
@@ -150,7 +278,7 @@ export class BranchViewPage {
     }
 
     select(data) {
-        this.presentActionSheet( data.label);
+        this.presentActionSheet(data.id, data.label);
     }
 
     setColorScheme(name) {
@@ -200,19 +328,19 @@ export class BranchViewPage {
         console.log('toggle expand', node);
     }
 
-    presentActionSheet(id) {
+    presentActionSheet(id, label) {
         let actionSheet = this.actionSheetCtrl.create({
-            title: 'Video ' + id,
+            title: label,
             buttons: [
                 {
                     text: 'Contribute',
                     handler: () => {
-                        console.log('Destructive clicked');
+                        this.contrib(id);
                     }
                 },{
                     text: 'View',
                     handler: () => {
-                        console.log('Archive clicked');
+                        this.openVideoView(id);
                     }
                 },{
                     text: 'Cancel',

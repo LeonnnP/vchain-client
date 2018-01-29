@@ -35,9 +35,11 @@ export class ProjectAddPage {
     tagKey = '';
     tags = [];
     contribKey = null;
+    callback;
 
     constructor(private videoEditor: VideoEditor, private projectService: ProjectServiceProvider, private file: File, public navCtrl: NavController, public navParams: NavParams, private mediaCapture: MediaCapture) {
         this.contribKey = this.navParams.get('contribKey')
+        this.callback = this.navParams.get("callback")
     }
 
     ngOnInit() {
@@ -89,7 +91,10 @@ export class ProjectAddPage {
                                     let fileVideo = self.projectService.blobToFile(blob2, self.fileObj.name);
 
                                     this.projectService.addVideoRoot(this.videoTitle, this.tagKey, this.videoDescription, fileImage, fileVideo).subscribe(function () {
-                                        self.navCtrl.pop();
+
+                                        self.callback().then(()=>{
+                                            self.navCtrl.pop();
+                                        });
                                     })
 
                                 },
@@ -111,7 +116,9 @@ export class ProjectAddPage {
                     let fileVideo = self.projectService.blobToFile(blob2, self.fileObj.name);
 
                     this.projectService.appendToVideo(this.contribKey, fileVideo, this.videoTitle).subscribe(function () {
-                        self.navCtrl.pop();
+                        self.callback().then(()=>{
+                            self.navCtrl.pop();
+                        });
                     })
 
                 },
