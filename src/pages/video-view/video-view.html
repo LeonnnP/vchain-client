@@ -19,9 +19,9 @@
          style="width: 100%; height: 100%;" class="videoPlayer"></video>
 
   <div style="width:100%;">
-    <button (click)="goLeft()" left>Go left</button>
-    <button (click)="goLeft()" middle>Close</button>
-    <button (click)="goRight()" right>Go right</button>
+    <button ion-button (click)="goLeft()"  style="float: left;" left>Go left</button>
+    <button ion-button (click)="goBack()" middle style=" margin-left: auto; margin-right: auto; ">Close</button>
+    <button ion-button (click)="goRight()"  style="float: right;" right>Go right</button>
   </div>
 
 </ion-content>
