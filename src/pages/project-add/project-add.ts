@@ -10,7 +10,8 @@ import {
 import {VideoPlayer} from '@ionic-native/video-player';
 import {File} from '@ionic-native/file';
 import {ProjectServiceProvider} from "../../providers/project-service/project-service";
-import { VideoEditor } from '@ionic-native/video-editor';
+import {VideoEditor} from '@ionic-native/video-editor';
+
 /**
  * Generated class for the ProjectAddPage page.
  *
@@ -49,7 +50,7 @@ export class ProjectAddPage {
             data => {
                 if (data.success) {
                     this.tags = data.result;
-                    for(let i=0; i<this.tags.length; i++){
+                    for (let i = 0; i < this.tags.length; i++) {
                         this.tags[i].arrayIndex = i;
                     }
 
@@ -57,12 +58,12 @@ export class ProjectAddPage {
             });
     }
 
-    addProject(){
+    addProject() {
 
-        if(this.fileObj == null) return;
+        if (this.fileObj == null) return;
 
         var self = this;
-        if(this.contribKey == undefined) {
+        if (this.contribKey == undefined) {
             this.videoEditor.createThumbnail(
                 {
                     fileUri: self.videoURL,
@@ -92,9 +93,9 @@ export class ProjectAddPage {
 
                                     this.projectService.addVideoRoot(this.videoTitle, this.tagKey, this.videoDescription, fileImage, fileVideo).subscribe(function () {
 
-                                        self.callback().then(()=>{
-                                            self.navCtrl.pop();
-                                        });
+
+                                        self.navCtrl.pop();
+
                                     })
 
                                 },
@@ -106,7 +107,7 @@ export class ProjectAddPage {
                         })
                 });
         }
-        else{
+        else {
             let index = self.fileObj.fullPath.lastIndexOf('/'),
                 finalPath = self.fileObj.fullPath.substr(0, index);
 
@@ -116,9 +117,9 @@ export class ProjectAddPage {
                     let fileVideo = self.projectService.blobToFile(blob2, self.fileObj.name);
 
                     this.projectService.appendToVideo(this.contribKey, fileVideo, this.videoTitle).subscribe(function () {
-                        self.callback().then(()=>{
-                            self.navCtrl.pop();
-                        });
+
+                        self.navCtrl.pop();
+
                     })
 
                 },
